@@ -345,7 +345,7 @@ EC_KEY_METHOD *cie_get_ec_key_method(void)
     if (!ops) {
         ops = EC_KEY_METHOD_new((EC_KEY_METHOD *)EC_KEY_OpenSSL());
         EC_KEY_METHOD_get_sign(ops, &orig_sign, NULL, NULL);
-        EC_KEY_METHOD_set_sign(ops, orig_sign, NULL, &orig_sign);
+        EC_KEY_METHOD_set_sign(ops, orig_sign, NULL, NULL);
         EC_KEY_METHOD_get_compute_key(ops, &ossl_ecdh_compute_key);
         EC_KEY_METHOD_set_compute_key(ops, cie_ecdh_compute_key);
         
