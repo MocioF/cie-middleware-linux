@@ -536,15 +536,29 @@ void putASN1Length(unsigned long len, ByteArray &data) {
 }
 
 std::string stdPrintf(const char *format, ...) {
+	// The va_list has to be handed to the v* variants. Passing "args"
+	// itself to snprintf()/sprintf() makes it the first variadic
+	// argument, so "%i" prints part of the va_list pointer and "%s"
+	// dereferences it and segfaults. A second traversal needs va_copy.
 	va_list args;
 	va_start(args, format);
-    
-    auto size = std::snprintf(nullptr, 0, format, args);
-    std::string result(size + 1, '\0');
-    std::sprintf(&result[0], format, args);
-    	
+
+	va_list args2;
+	va_copy(args2, args);
+
+	int size = std::vsnprintf(nullptr, 0, format, args);
 	va_end(args);
-	return result;
+
+	if (size < 0) {
+		va_end(args2);
+		return std::string();
+	}
+
+	std::vector<char> buffer((size_t)size + 1);
+	std::vsnprintf(buffer.data(), buffer.size(), format, args2);
+	va_end(args2);
+
+	return std::string(buffer.data(), (size_t)size);
 }
 
 SYSTEMTIME convertStringToSystemTime(const char *dateTimeString)
