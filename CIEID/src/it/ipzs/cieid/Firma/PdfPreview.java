@@ -21,13 +21,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 public class PdfPreview {
     private JPanel prPanel;
     private String filePath;
     private int pdfPageIndex;
     private int pdfNumPages;
-	private List<Image> images;			    
+	private List<Image> images;
 	private JLabel imgLabel;
     private ImageIcon imgIcon;
     private MoveablePicture signImage;
@@ -63,6 +64,14 @@ public class PdfPreview {
 				throw new IOException("nessuna pagina renderizzata");
 
 			showPreview();
+        } catch (GhostscriptMissingException e) {
+            System.out.println(e.getMessage());
+				JOptionPane.showMessageDialog(prPanel,
+					"Per l'anteprima del documento e la firma grafica e' necessario\n"
+					+ "Ghostscript, che non risulta installato.\n\n"
+					+ "Installare il pacchetto \"ghostscript\" della propria distribuzione\n"
+					+ "e riaprire questa finestra.",
+					"Ghostscript non trovato", JOptionPane.WARNING_MESSAGE);
 		} catch (IOException e) {
 			System.out.println("Anteprima PDF non disponibile");
 			e.printStackTrace();
@@ -72,6 +81,55 @@ public class PdfPreview {
 			e.printStackTrace();
 		}
     }
+
+    /**
+     * Eccezione lanciata quando non è possibile trovare il binario gs.
+     */
+    static class GhostscriptMissingException extends IOException
+    {
+        private static final long serialVersionUID = 1L;
+        GhostscriptMissingException(String message)
+        {
+            super(message);
+        }
+    }
+
+    /**
+     * Directory di fallback in cui cercare il binario gs se non è nel PATH.
+     */
+    private static final String[] FALLBACK_DIRS = { "/usr/bin", "/bin" };
+
+    /**
+     * Cerca il binario gs nel PATH di sistema.
+     * 
+     * @return il file del binario, o null se non trovato
+     */
+    private static File findExecutable(String name)
+    {
+        List<String> dirs = new ArrayList<String>();
+
+        String path = System.getenv("PATH");
+        if (path != null)
+            dirs.addAll(Arrays.asList(path.split(File.pathSeparator)));
+
+        dirs.addAll(Arrays.asList(FALLBACK_DIRS));
+        
+        for (String dir : dirs)
+        {
+            if (dir.isEmpty())
+                continue;
+
+            File candidate = new File(dir, name);
+            if (candidate.isFile() && candidate.canExecute())
+                return candidate;
+        }
+        return null;
+    }
+
+    /**
+     * Nome del binario Ghostscript su Linux (e macOS).
+     */
+    private static final String GHOSTSCRIPT_BINARY = "gs";
 
     /**
      * Renderizza le pagine invocando il binario gs. Il numero di file
@@ -87,13 +145,21 @@ public class PdfPreview {
         Path tmpDir = Files.createTempDirectory("cieid-preview");
         try
         {
-            ProcessBuilder pb = new ProcessBuilder("gs",
+            File gs = findExecutable(GHOSTSCRIPT_BINARY);
+            if (gs == null)
+                throw new GhostscriptMissingException(
+                        "Ghostscript non trovato: '" + GHOSTSCRIPT_BINARY
+                        + "' non e' presente ne' in PATH ne' in "
+                        + Arrays.toString(FALLBACK_DIRS));
+
+            ProcessBuilder pb = new ProcessBuilder(gs.getAbsolutePath(),
                     "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
                     "-sDEVICE=png16m",
                     "-r" + dpi,
                     "-sOutputFile=" + tmpDir.resolve("page-%d.png").toString(),
                     pdfPath);
             pb.redirectErrorStream(true);
+
             Process proc = pb.start();
 
             StringBuilder output = new StringBuilder();
@@ -120,7 +186,7 @@ public class PdfPreview {
             if (pages == null)
                 return Collections.<Image>emptyList();
 
-            // page-2.png viene dopo page-10.png in ordine alfabetico.
+            // In ordine alfabetico page-2.png viene dopo page-10.png.
             // Ordino sull'indice numerico, non sul nome.
             Arrays.sort(pages, new java.util.Comparator<File>() {
                 public int compare(File l, File r) {
