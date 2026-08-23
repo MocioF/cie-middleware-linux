@@ -25,7 +25,6 @@ import javax.imageio.ImageIO;
 public class PdfPreview {
     private JPanel prPanel;
     private String filePath;
-    private String signImagePath;
     private int pdfPageIndex;
     private int pdfNumPages;
 	private List<Image> images;			    
@@ -38,7 +37,6 @@ public class PdfPreview {
     {
     	this.prPanel = panelPdfPreview;
     	this.filePath = pdfFilePath;
-    	this.signImagePath = signImagePath;
     	this.pdfPageIndex = 0;
     	imgIcon = new ImageIcon();
     	imgLabel = new JLabel();
