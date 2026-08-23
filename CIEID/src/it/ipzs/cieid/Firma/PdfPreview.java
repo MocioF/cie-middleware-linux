@@ -2,21 +2,15 @@ package it.ipzs.cieid.Firma;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
