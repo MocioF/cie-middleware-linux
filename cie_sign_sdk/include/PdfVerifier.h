@@ -12,8 +12,6 @@
 
 
 #include "podofo/podofo.h"
-#include "podofo/doc/PdfSignOutputDevice.h"
-#include "podofo/doc/PdfSignatureField.h"
 #include "ASN1/UUCByteArray.h"
 #include "disigonsdk.h"
 
