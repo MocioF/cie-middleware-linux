@@ -42,7 +42,11 @@ int PDFVerifier::Load(const char* pdf, int len)
 	try
 	{
 		m_pPdfDocument = new PdfMemDocument();
+#if CIE_PODOFO_MODERN
+		m_pPdfDocument->LoadFromBuffer(bufferview(pdf, len));
+#else
 		m_pPdfDocument->Load(pdf, len);
+#endif
 		m_actualLen = len;
 		m_szDocBuffer = (char*)pdf;
 		
@@ -131,7 +135,12 @@ int PDFVerifier::GetNumberOfSignatures(PdfMemDocument* pPdfDocument)
     printf("GetNumberOfSignatures");
     
 	/// Find the document catalog dictionary
+#if CIE_PODOFO_MODERN
+	// in 0.10 GetTrailer() restituisce PdfTrailer&, non PdfObject*
+	const PdfObject *const trailer = &pPdfDocument->GetTrailer().GetObject();
+#else
 	const PdfObject *const trailer = pPdfDocument->GetTrailer();
+#endif
 	if (!trailer->IsDictionary())
 		return -1;
 	
@@ -228,7 +237,11 @@ int PDFVerifier::VerifySignature(int index, const char* szDate, char* signatureT
 		return -1;
 	
 	/// Find the document catalog dictionary
+#if CIE_PODOFO_MODERN
+	const PdfObject *const trailer = &m_pPdfDocument->GetTrailer().GetObject();
+#else
 	const PdfObject *const trailer = m_pPdfDocument->GetTrailer();
+#endif
 	if (!trailer->IsDictionary())
 		return -1;
 	
@@ -450,7 +463,11 @@ int PDFVerifier::GetSignature(int index, UUCByteArray& signedDocument, Signature
 		return -1;
 	
 	/// Find the document catalog dictionary
+#if CIE_PODOFO_MODERN
+	const PdfObject *const trailer = &m_pPdfDocument->GetTrailer().GetObject();
+#else
 	const PdfObject *const trailer = m_pPdfDocument->GetTrailer();
+#endif
 	if (!trailer->IsDictionary())
 		return -1;
 	
@@ -533,13 +550,24 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 	}
 	
 	PdfArray rectArray = keyRect->GetArray();
+#if CIE_PODOFO_MODERN
+	// PdfRect si chiama Rect e FromArray e' diventata statica
+	Rect rect = Rect::FromArray(rectArray);
+#else
 	PdfRect rect;
 	rect.FromArray(rectArray);
+#endif
 	
 	appearanceInfo.left = rect.GetLeft();
 	appearanceInfo.bottom = rect.GetBottom();
+#if CIE_PODOFO_MODERN
+	// in 0.10 Width e Height sono membri pubblici, non accessori
+	appearanceInfo.width = rect.Width;
+	appearanceInfo.heigth = rect.Height;
+#else
 	appearanceInfo.width = rect.GetWidth();
 	appearanceInfo.heigth = rect.GetHeight();
+#endif
 	
 	
 	const PdfObject *const signature = pDoc->GetObjects().GetObject(keyVValue->GetReference());
@@ -782,13 +810,24 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 	}
 	
 	PdfArray rectArray = keyRect->GetArray();
+#if CIE_PODOFO_MODERN
+	// PdfRect si chiama Rect e FromArray e' diventata statica
+	Rect rect = Rect::FromArray(rectArray);
+#else
 	PdfRect rect;
 	rect.FromArray(rectArray);
+#endif
 	
 	appearanceInfo.left = rect.GetLeft();
 	appearanceInfo.bottom = rect.GetBottom();
+#if CIE_PODOFO_MODERN
+	// in 0.10 Width e Height sono membri pubblici, non accessori
+	appearanceInfo.width = rect.Width;
+	appearanceInfo.heigth = rect.Height;
+#else
 	appearanceInfo.width = rect.GetWidth();
 	appearanceInfo.heigth = rect.GetHeight();
+#endif
 	
 	
 	const PdfObject *const signature = pDoc->GetObjects().GetObject(keyVValue->GetReference());
@@ -837,7 +876,11 @@ int PDFVerifier::Load(const char* pdf, int len)
 	try
 	{
 		m_pPdfDocument = new PdfMemDocument();
+#if CIE_PODOFO_MODERN
+		m_pPdfDocument->LoadFromBuffer(bufferview(pdf, len));
+#else
 		m_pPdfDocument->Load(pdf, len);
+#endif
 		m_actualLen = len;
 		m_szDocBuffer = (char*)pdf;
 		
@@ -852,7 +895,12 @@ int PDFVerifier::Load(const char* pdf, int len)
 int PDFVerifier::GetNumberOfSignatures(PdfMemDocument* pPdfDocument)
 {
 	/// Find the document catalog dictionary
+#if CIE_PODOFO_MODERN
+	// in 0.10 GetTrailer() restituisce PdfTrailer&, non PdfObject*
+	const PdfObject *const trailer = &pPdfDocument->GetTrailer().GetObject();
+#else
 	const PdfObject *const trailer = pPdfDocument->GetTrailer();
+#endif
 	if (!trailer->IsDictionary())
 		return -1;
 	
@@ -917,7 +965,11 @@ int PDFVerifier::VerifySignature(int index, const char* szDate, char* signatureT
 		return -1;
 	
 	/// Find the document catalog dictionary
+#if CIE_PODOFO_MODERN
+	const PdfObject *const trailer = &m_pPdfDocument->GetTrailer().GetObject();
+#else
 	const PdfObject *const trailer = m_pPdfDocument->GetTrailer();
+#endif
 	if (!trailer->IsDictionary())
 		return -1;
 	
@@ -1120,7 +1172,11 @@ int PDFVerifier::GetSignature(int index, UUCByteArray& signedDocument, Signature
 		return -1;
 	
 	/// Find the document catalog dictionary
+#if CIE_PODOFO_MODERN
+	const PdfObject *const trailer = &m_pPdfDocument->GetTrailer().GetObject();
+#else
 	const PdfObject *const trailer = m_pPdfDocument->GetTrailer();
+#endif
 	if (!trailer->IsDictionary())
 		return -1;
 	
@@ -1203,13 +1259,24 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 	}
 	
 	PdfArray rectArray = keyRect->GetArray();
+#if CIE_PODOFO_MODERN
+	// PdfRect si chiama Rect e FromArray e' diventata statica
+	Rect rect = Rect::FromArray(rectArray);
+#else
 	PdfRect rect;
 	rect.FromArray(rectArray);
+#endif
 	
 	appearanceInfo.left = rect.GetLeft();
 	appearanceInfo.bottom = rect.GetBottom();
+#if CIE_PODOFO_MODERN
+	// in 0.10 Width e Height sono membri pubblici, non accessori
+	appearanceInfo.width = rect.Width;
+	appearanceInfo.heigth = rect.Height;
+#else
 	appearanceInfo.width = rect.GetWidth();
 	appearanceInfo.heigth = rect.GetHeight();
+#endif
 	
 	
 	const PdfObject *const signature = pDoc->GetObjects().GetObject(keyVValue->GetReference());

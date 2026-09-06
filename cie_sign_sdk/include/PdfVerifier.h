@@ -12,6 +12,12 @@
 
 
 #include "podofo/podofo.h"
+
+#if PODOFO_VERSION_MAJOR > 0 || PODOFO_VERSION_MINOR >= 10
+#define CIE_PODOFO_MODERN 1
+#else
+#define CIE_PODOFO_MODERN 0
+#endif
 #include "ASN1/UUCByteArray.h"
 #include "disigonsdk.h"
 
