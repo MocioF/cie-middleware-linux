@@ -299,7 +299,7 @@ int PDFVerifier::VerifySignature(const PdfMemDocument* pDoc, const PdfObject *co
 		return -2;
 	
 	string value;
-	keyFTValue->ToString(value);
+	ObjectToString(keyFTValue, value);
 	if (value != "/Sig") 
 		return -3;
 	
@@ -315,13 +315,13 @@ int PDFVerifier::VerifySignature(const PdfMemDocument* pDoc, const PdfObject *co
 		string subfilter;
 		
 		const PdfObject *const keyByteRange = signature->GetDictionary().GetKey(PdfName("ByteRange"));
-		keyByteRange->ToString(byteRange);
+		ObjectToString(keyByteRange, byteRange);
 		
 		const PdfObject *const keyContents = signature->GetDictionary().GetKey(PdfName("Contents"));
-		keyContents->ToString(signdData);
+		ObjectToString(keyContents, signdData);
 		
 		const PdfObject *const keySubFilter = signature->GetDictionary().GetKey(PdfName("SubFilter"));
-		keySubFilter->ToString(subfilter);
+		ObjectToString(keySubFilter, subfilter);
 		
 		const char* szEntry = strtok((char*)byteRange.c_str(), " []");
 		
@@ -428,7 +428,7 @@ bool PDFVerifier::IsSignatureField(const PdfMemDocument* pDoc, const PdfObject *
 		return false;
 	
 	string value;
-	keyFTValue->ToString(value);
+	ObjectToString(keyFTValue, value);
 	if (value != "/Sig") 
 		return false;
 	
@@ -518,7 +518,7 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 		return -2;
 	
 	string value;
-	keyFTValue->ToString(value);
+	ObjectToString(keyFTValue, value);
 	if (value != "/Sig") 
 		return -3;
 	
@@ -548,7 +548,7 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 		string signdData;
 				
 		const PdfObject *const keyContents = signature->GetDictionary().GetKey(PdfName("Contents"));
-		keyContents->ToString(signdData);
+		ObjectToString(keyContents, signdData);
 		
 		const char* szSignedData = strtok((char*)signdData.c_str(), "<>");
 		
@@ -562,7 +562,7 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 		{
 			string byteRange;
 			const PdfObject *const keyByteRange = signature->GetDictionary().GetKey(PdfName("ByteRange"));
-			keyByteRange->ToString(byteRange);
+			ObjectToString(keyByteRange, byteRange);
 			
 			const char* szEntry = strtok((char*)byteRange.c_str(), " []");
 		
@@ -767,7 +767,7 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 		return -2;
 	
 	string value;
-	keyFTValue->ToString(value);
+	ObjectToString(keyFTValue, value);
 	if (value != "/Sig") 
 		return -3;
 	
@@ -797,7 +797,7 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 		string signdData;
 				
 		const PdfObject *const keyContents = signature->GetDictionary().GetKey(PdfName("Contents"));
-		keyContents->ToString(signdData);
+		ObjectToString(keyContents, signdData);
 		
 		const char* szSignedData = strtok((char*)signdData.c_str(), "<>");
 		
@@ -985,7 +985,7 @@ int PDFVerifier::VerifySignature(const PdfMemDocument* pDoc, const PdfObject *co
 		return -2;
 	
 	string value;
-	keyFTValue->ToString(value);
+	ObjectToString(keyFTValue, value);
 	if (value != "/Sig") 
 		return -3;
 	
@@ -1001,13 +1001,13 @@ int PDFVerifier::VerifySignature(const PdfMemDocument* pDoc, const PdfObject *co
 		string subfilter;
 		
 		const PdfObject *const keyByteRange = signature->GetDictionary().GetKey(PdfName("ByteRange"));
-		keyByteRange->ToString(byteRange);
+		ObjectToString(keyByteRange, byteRange);
 		
 		const PdfObject *const keyContents = signature->GetDictionary().GetKey(PdfName("Contents"));
-		keyContents->ToString(signdData);
+		ObjectToString(keyContents, signdData);
 		
 		const PdfObject *const keySubFilter = signature->GetDictionary().GetKey(PdfName("SubFilter"));
-		keySubFilter->ToString(subfilter);
+		ObjectToString(keySubFilter, subfilter);
 		
 		const char* szEntry = strtok((char*)byteRange.c_str(), " []");
 		
@@ -1098,7 +1098,7 @@ bool PDFVerifier::IsSignatureField(const PdfMemDocument* pDoc, const PdfObject *
 		return false;
 	
 	string value;
-	keyFTValue->ToString(value);
+	ObjectToString(keyFTValue, value);
 	if (value != "/Sig") 
 		return false;
 	
@@ -1188,7 +1188,7 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 		return -2;
 	
 	string value;
-	keyFTValue->ToString(value);
+	ObjectToString(keyFTValue, value);
 	if (value != "/Sig") 
 		return -3;
 	
@@ -1218,7 +1218,7 @@ int PDFVerifier::GetSignature(const PdfMemDocument* pDoc, const PdfObject *const
 		string signdData;
 				
 		const PdfObject *const keyContents = signature->GetDictionary().GetKey(PdfName("Contents"));
-		keyContents->ToString(signdData);
+		ObjectToString(keyContents, signdData);
 		
 		const char* szSignedData = strtok((char*)signdData.c_str(), "<>");
 		

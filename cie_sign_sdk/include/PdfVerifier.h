@@ -18,6 +18,23 @@
 using namespace PoDoFo;
 using namespace std;
 
+inline void ObjectToString(const PdfObject* pObj, std::string& out)
+{
+	out.clear();
+	if (pObj == 0)
+		return;
+
+	pObj->ToString(out);
+
+	while (!out.empty())
+	{
+		const char c = out[out.size() - 1];
+		if (c != '\n' && c != '\r' && c != ' ' && c != '\t')
+			break;
+		out.erase(out.size() - 1);
+	}
+}
+
 typedef struct _SignatureAppearanceInfo
 {
 	int left;
